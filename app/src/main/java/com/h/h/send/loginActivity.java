@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +21,7 @@ public class loginActivity extends AppCompatActivity {
     private EditText pass;
     private EditText uname;
     private Button sin;
+    private TextView sup;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -33,6 +35,8 @@ public class loginActivity extends AppCompatActivity {
         pass=(EditText)findViewById(R.id.password);
         sin=(Button)findViewById(R.id.signin);
 
+        sup=(TextView)findViewById(R.id.signup);
+
         mAuth=FirebaseAuth.getInstance();
 
         mAuthListener=new FirebaseAuth.AuthStateListener() {
@@ -41,7 +45,11 @@ public class loginActivity extends AppCompatActivity {
 
                 if (firebaseAuth.getCurrentUser()!=null)
                 {
-                    startActivity(new Intent(loginActivity.this,MainActivity.class));
+
+                    String sss=uname.getText().toString();
+                    String parts[]=sss.split("@");
+
+                    startActivity(new Intent(loginActivity.this,MainActivity.class).putExtra("sub",parts[0]));
                 }
 
             }
@@ -51,6 +59,13 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startsignin();
+            }
+        });
+        sup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(loginActivity.this,loginSignup.class));
+
             }
         });
     }
@@ -70,7 +85,7 @@ public class loginActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(e)||TextUtils.isEmpty(u))
         {
-            Toast.makeText(loginActivity.this,"Login sucess",Toast.LENGTH_SHORT).show();
+            Toast.makeText(loginActivity.this,"Login error",Toast.LENGTH_SHORT).show();
         }
         else {
 

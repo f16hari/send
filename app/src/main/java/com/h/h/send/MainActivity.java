@@ -1,5 +1,6 @@
 package com.h.h.send;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent intent=getIntent();
+        String name=intent.getStringExtra("sub");
+
         send=(Button)findViewById(R.id.sendButton);
         messageValue=(EditText)findViewById(R.id.messageV);
 
@@ -49,9 +53,24 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+       /* recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if(i3<i7)
+                {
+                    recyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+
+                        }
+                    },0);
+                }
+            }
+        });*/
 
 
-        dbrf= FirebaseDatabase.getInstance().getReference().child("message");
+        dbrf= FirebaseDatabase.getInstance().getReference().child(name);
 
 
 
@@ -71,17 +90,22 @@ public class MainActivity extends AppCompatActivity {
         dbrf.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String ss=null;
+                final List<String> mlist=new ArrayList<>();
                 for(DataSnapshot post:dataSnapshot.getChildren())
                 {
-                    String ss=post.getValue(String.class);
+                     ss=post.getValue(String.class);
                     mlist.add(ss);
+
                 }
                /* HashMap<Integer,String> hm=(HashMap<Integer, String>)dataSnapshot.getValue();
                 ArrayList<String> arrayList= new ArrayList<String>(hm.values());
                 for (String s : arrayList) {
                     System.out.println("Adapter data is "+s);
                 }*/
-                recyclerView.setAdapter(new adapterclass(mlist));
+               adapterclass a=new adapterclass(mlist);
+               recyclerView.setAdapter(a);
 
             }
 
