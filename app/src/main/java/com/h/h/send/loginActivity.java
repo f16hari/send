@@ -20,6 +20,7 @@ public class loginActivity extends AppCompatActivity {
 
     private EditText pass;
     private EditText uname;
+    private EditText ssname;
     private Button sin;
     private TextView sup;
 
@@ -33,6 +34,7 @@ public class loginActivity extends AppCompatActivity {
 
         uname=(EditText)findViewById(R.id.username);
         pass=(EditText)findViewById(R.id.password);
+        ssname=(EditText)findViewById(R.id.sname);
         sin=(Button)findViewById(R.id.signin);
 
         sup=(TextView)findViewById(R.id.signup);
@@ -49,7 +51,9 @@ public class loginActivity extends AppCompatActivity {
                     String sss=uname.getText().toString();
                     String parts[]=sss.split("@");
 
-                    startActivity(new Intent(loginActivity.this,MainActivity.class).putExtra("sub",parts[0]));
+                    String sn=ssname.getText().toString();
+
+                    startActivity(new Intent(loginActivity.this,MainActivity.class).putExtra("sub",parts[0]).putExtra("sname",sn));
                 }
 
             }

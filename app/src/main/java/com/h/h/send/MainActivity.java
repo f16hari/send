@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private String m;
     private DatabaseReference dbrf;
     private RecyclerView recyclerView;
+    private String sn;
+    private int l;
+    private char[] a=new char[50];
+    public String string;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         String name=intent.getStringExtra("sub");
+        sn=intent.getStringExtra("sname");
+
 
         send=(Button)findViewById(R.id.sendButton);
         messageValue=(EditText)findViewById(R.id.messageV);
-
-        //receive=(Button)findViewById(R.id.receiveButton);
-        /*RmessageValue=(TextView)findViewById(R.id.Rmessage);*/
 
 
         recyclerView=(RecyclerView)findViewById(R.id.messageList);
@@ -78,8 +81,10 @@ public class MainActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int zzz;
+                zzz=sn.length();
 
-                m=messageValue.getText().toString();
+                m=zzz+sn+messageValue.getText().toString();
                 DatabaseReference newPost=dbrf.push();
                 newPost.setValue(m);
 
@@ -92,18 +97,30 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String ss=null;
+                a=null;
+                l=0;
                 final List<String> mlist=new ArrayList<>();
                 for(DataSnapshot post:dataSnapshot.getChildren())
                 {
                      ss=post.getValue(String.class);
+                     a=ss.toCharArray();
+                     l=ss.length();
+                     int x= Character.getNumericValue(a[0]);
+
+                     ss=new String(a,x+1,l-(x+1));
+                     string=new String(a,1,x);
+
+                    if(string.equals(sn))
+                        string="t";
+                    else
+                        string="f";
+
+                    ss=ss+string;
+
                     mlist.add(ss);
 
                 }
-               /* HashMap<Integer,String> hm=(HashMap<Integer, String>)dataSnapshot.getValue();
-                ArrayList<String> arrayList= new ArrayList<String>(hm.values());
-                for (String s : arrayList) {
-                    System.out.println("Adapter data is "+s);
-                }*/
+
                adapterclass a=new adapterclass(mlist);
                recyclerView.setAdapter(a);
 
